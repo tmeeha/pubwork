@@ -1,72 +1,52 @@
 
-##########################  DATA ENTRY  ##########################
-
+##########################  SIMPLE DATA ENTRY  ##########################
+### SET UP WORKING DIRECTORY
 ## output location
 dirName <- getwd()
 
+### DATA PRODUCT CHARACTERISTICS
 ## official data product name in title case
 dpName <- "IR Biological Temperature"
-
 ## capital letters from name
 dpCaps <- "IRBT"
-
 ## 5 digit data product ID code
 dpId5 <- "00005"
-
 ## 3 digit data product revision number
 dpRev3 <- "001"
-
 ## three letter data product code for pub workbook file name
 code3 <- "irb"
-
 ## 6 digit Agile document code for pub workbook file name
 agile6 <- "002853"
+## standard units for all subproducts
+units <- "wattsPerSquareMeter"
 
-
-
+### DIFFERENT SUBPRODUCTS IN WORKBOOK
 ## primary (only) subproduct field name
 pFieldName <- "inPAR"
-
 ## primary (only) subproduct field description
 pFieldDesc <- "incoming PAR"
-
 ## second subproduct field name
 sFieldName <- "outPAR"
-
 ## second subproduct field description
 sFieldDesc <- "outgoingPAR"
-
 ## third subproduct field name
 tFieldName <- ""
-
 ## third subproduct field description
 tFieldDesc <- ""
 
-
-
-## standard units
-units <- "wattsPerSquareMeter"
-
-
-
+### DIFFERENT TIME INTERVALS
 ## most frequent time index
 fTimeA <- "1"
-
 ## most frequent time description
 fDescA <- "minute"
-
 ## next-most frequent time index
 fTimeB <- "5"
-
 ## next-most frequent time description
 fDescB <- "minute"
-
 ## third-most frequent time index
 fTimeC <- "30"
-
 ## third-most frequent time description
 fDescC <- "minute"
-
 #################################################################
 
 
@@ -74,44 +54,184 @@ fDescC <- "minute"
 
 
 
-#######################   CODE BLOCK ONE  ##################################
+########  CREATE LONG LIST OF FIELDS AND DESCRIPTIONS  ##########
+longLists <- function() {
+  # create a field name list for the lowest averageing period
+  fieldNameL <- list("startDateTime","endDateTime",
+                         paste(pFieldName,"Mean",sep=""),
+                     paste(pFieldName,"Minimum",sep=""),
+                     paste(pFieldName,"Maximum",sep=""),
+                     paste(pFieldName,"Variance",sep=""),
+                     paste(pFieldName,"NumPts",sep=""),
+                     paste(pFieldName,"ExpUncert",sep=""),
+                     paste(pFieldName,"StdErMean",sep=""),
+                     "rangeQAQCRpt","persistenceQAQCRpt",
+                     "stepQAQCRpt","nullQAQCRpt",
+                     "gapQAQCRpt","consistencyQAQCRpt",
+                     "spikeQAQCRpt",
+                     "alphaQAQCRpt","betaQAQCRpt",
+                     "rangeFailQM","rangePassQM","rangeNAQM",
+                     "persistenceFailQM","persistencePassQM",
+                     "persistenceNAQM",
+                     "stepFailQM","stepPassQM","stepNAQM",
+                     "nullFailQM","nullPassQM","nullNAQM",
+                     "gapFailQM","gapPassQM","gapNAQM",
+                     "spikeFailQM","spikePassQM","spikeNAQM",
+                     "consistencyFailQM","consistencyPassQM",
+                     "consistencyNAQM",
+                     "alphaQM","betaQM","finalQF"
+                    )
+  ## establish length of longFieldNameL
+  wbLength <- length(fieldNameL)
+  l1 <- length(fieldNameL)
+  ## create a list of field descriptions --------------------------
+  descriptionL <- list("Date and time at which a sampling is initiated",
+                       "Date and time at which a sampling is completed",
+                       paste("Arithmetic mean of",pFieldDesc,sep=" "),
+                       paste("Minimum",pFieldDesc,sep=" "),
+                       paste("Maximum",pFieldDesc,sep=" "),
+                       paste("Variance in",pFieldDesc,sep=" "),
+                       paste("Number of points used to calculate the arithmetic mean of",pFieldDesc,sep=" "),
+                       paste("Expanded uncertainty for",pFieldDesc,sep=" "),
+                       paste("Standard error of the mean for",pFieldDesc,sep=" "),
+                       "Quality assurance and quality control report for the range test, which indicates whether a datum exceeds a realisitc value, detailed in NEON.DOC.011081 (1=fail, 0=pass, -1=NA (i.e., couldn't be run))",
+                       "Quality assurance and quality control report for the persistence test, which indicates whether there is a realistic fluctuation of values over a designated period of time, detailed in NEON.DOC.011081 (1=fail, 0=pass, -1=NA (i.e., couldn't be run))",
+                       "Quality assurance and quality control report for the step test, which indicates whether unusual jumps in the data exist, detailed in NEON.DOC.011081 (1=fail, 0=pass, -1=NA (i.e., couldn't be run))",
+                       "Quality assurance and quality control report for the null test, which indicates a missing datum, detailed in NEON.DOC.011081 (1=fail, 0=pass, -1=NA (i.e., couldn't be run))",
+                       "Quality assurance and quality control report for the gap test, which indicates that the datum is missing and is apart of a prolonged period of missing data, detailed in NEON.DOC.011081 (1=fail, 0=pass)",
+                       "Quality assurance and quality control report for the consistency test, which indicates whether or not measurements are consistent with co-located measurements, (1=fail, 0=pass, -1=NA (i.e., couldn't be run))",
+                       "Quality assurance and quality control report for the spike test, which indicates whether or not a datum has been identified as a spike, detailed in NEON.DOC.000783 (1=fail, 0=pass, -1=NA (i.e., couldn't be run))",
+                       "Quality assurance and quality control report for the alpha quality flag, which indicates if one or more quality analysis failed for a datum, detailed in NEON.DOC.001113 (1=fail, 0=pass, -1=NA (i.e., couldn't be run))",
+                       "Quality assurance and quality control report for the beta quality flag, which indicates if one or more quality analysis could not be run for a datum, detailed in NEON.DOC.001113 (1=fail, 0=pass, -1=NA (i.e., couldn't be run))",
+                       "Quality metric that summarizes the failed outcomes of the range test over the averaging period, as a percent",
+                       "Quality metric that summarizes the passed outcomes of the range test over the averaging period, as a percent",
+                       "Quality metric that summarizes when the range test could not be run over the averaging period, as a percent",
+                       "Quality metric that summarizes the failed outcomes of the persistence test over the averaging period, as a percent",
+                       "Quality metric that summarizes the passed outcomes of the persistence test over the averaging period, as a percent",
+                       "Quality metric that summarizes when the persistence test could not be run over the averaging period, as a percent",
+                       "Quality metric that summarizes the failed outcomes of the step test over the averaging period, as a percent",
+                       "Quality metric that summarizes the passed outcomes of the step test over the averaging period, as a percent",
+                       "Quality metric that summarizes when the step test could not be run over the averaging period, as a percent",
+                       "Quality metric that summarizes the failed outcomes of the null test over the averaging period, as a percent",
+                       "Quality metric that summarizes the passed outcomes of the null test over the averaging period, as a percent",
+                       "Quality metric that summarizes when the null test could not be run over the averaging period, as a percent",
+                       "Quality metric that summarizes the failed outcomes of the gap test over the averaging period, as a percent",
+                       "Quality metric that summarizes the passed outcomes of the gap test over the averaging period, as a percent",
+                       "Quality metric that summarizes when the gap test could not be run over the averaging period, as a percent",
+                       "Quality metric that summarizes the failed outcomes of the spike test over the averaging period, as a percent",
+                       "Quality metric that summarizes the passed outcomes of the spike test over the averaging period, as a percent",
+                       "Quality metric that summarizes when the spike test could not be run over the averaging period, as a percent",
+                       "Quality metric that summarizes the failed outcomes of the consistency test over the averaging period, as a percent",
+                       "Quality metric that summarizes the passed outcomes of the consistency test over the averaging period, as a percent",
+                       "Quality metric that summarizes when the consistency test could not be run over the averaging period, as a percent",
+                       "Quality metric detailing the outcomes of the alpha quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                       "Quality metric detailing the outcomes of the beta quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                       "Quality flag indicating whether a data product has passed or failed an overall assessment of its quality, detailed in NEON.DOC.001113 (1=fail, 0=pass)"
+                      )
+  l2 <- length(descriptionL)
+  testL <- l1 == l2
+  out <- list(fieldNameL, descriptionL, wbLength, testL)
+  return(out)
+}
+##################################################################
+
+
+
+
+########  CREATE SHORT LIST OF FIELDS AND DESCRIPTIONS  ##########
+shortLists <- function() {
+  # create a field name list for the higher averageing periods
+  fieldNameL <- list("startDateTime","endDateTime",paste(pFieldName,"Mean",sep=""),
+                     paste(pFieldName,"Minimum",sep=""),
+                     paste(pFieldName,"Maximum",sep=""),
+                     paste(pFieldName,"Variance",sep=""),
+                     paste(pFieldName,"NumPts",sep=""),
+                     paste(pFieldName,"ExpUncert",sep=""),
+                     paste(pFieldName,"StdErMean",sep=""),
+                     "rangeFailQM","rangePassQM","rangeNAQM",
+                     "persistenceFailQM","persistencePassQM",
+                     "persistenceNAQM",
+                     "stepFailQM","stepPassQM","stepNAQM",
+                     "nullFailQM","nullPassQM","nullNAQM",
+                     "gapFailQM","gapPassQM","gapNAQM",
+                     "spikeFailQM","spikePassQM","spikeNAQM",
+                     "consistencyFailQM","consistencyPassQM",
+                     "consistencyNAQM",
+                     "alphaQM","betaQM","finalQF"
+                    )
+  # establish length of fieldNameL
+  wbLength <- length(fieldNameL)
+  l1 <- length(fieldNameL)
+  # create a list of field descriptions
+  descriptionL <- list("Date and time at which a sampling is initiated",
+                       "Date and time at which a sampling is completed",
+                       paste("Arithmetic mean of",pFieldDesc,sep=" "),
+                       paste("Minimum",pFieldDesc,sep=" "),
+                       paste("Maximum",pFieldDesc,sep=" "),
+                       paste("Variance in",pFieldDesc,sep=" "),
+                       paste("Number of points used to calculate the arithmetic mean of",pFieldDesc,sep=" "),
+                       paste("Expanded uncertainty for",pFieldDesc,sep=" "),
+                       paste("Standard error of the mean for",pFieldDesc,sep=" "),
+                       "Quality metric that summarizes the failed outcomes of the range test over the averaging period, as a percent",
+                       "Quality metric that summarizes the passed outcomes of the range test over the averaging period, as a percent",
+                       "Quality metric that summarizes when the range test could not be run over the averaging period, as a percent",
+                       "Quality metric that summarizes the failed outcomes of the persistence test over the averaging period, as a percent",
+                       "Quality metric that summarizes the passed outcomes of the persistence test over the averaging period, as a percent",
+                       "Quality metric that summarizes when the persistence test could not be run over the averaging period, as a percent",
+                       "Quality metric that summarizes the failed outcomes of the step test over the averaging period, as a percent",
+                       "Quality metric that summarizes the passed outcomes of the step test over the averaging period, as a percent",
+                       "Quality metric that summarizes when the step test could not be run over the averaging period, as a percent",
+                       "Quality metric that summarizes the failed outcomes of the null test over the averaging period, as a percent",
+                       "Quality metric that summarizes the passed outcomes of the null test over the averaging period, as a percent",
+                       "Quality metric that summarizes when the null test could not be run over the averaging period, as a percent",
+                       "Quality metric that summarizes the failed outcomes of the gap test over the averaging period, as a percent",
+                       "Quality metric that summarizes the passed outcomes of the gap test over the averaging period, as a percent",
+                       "Quality metric that summarizes when the gap test could not be run over the averaging period, as a percent",
+                       "Quality metric that summarizes the failed outcomes of the spike test over the averaging period, as a percent",
+                       "Quality metric that summarizes the passed outcomes of the spike test over the averaging period, as a percent",
+                       "Quality metric that summarizes when the spike test could not be run over the averaging period, as a percent",
+                       "Quality metric that summarizes the failed outcomes of the consistency test over the averaging period, as a percent",
+                       "Quality metric that summarizes the passed outcomes of the consistency test over the averaging period, as a percent",
+                       "Quality metric that summarizes when the consistency test could not be run over the averaging period, as a percent",
+                       "Quality metric detailing the outcomes of the alpha quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                       "Quality metric detailing the outcomes of the beta quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                       "Quality flag indicating whether a data product has passed or failed an overall assessment of its quality, detailed in NEON.DOC.001113 (1=fail, 0=pass)"
+                      )
+  l2 <- length(descriptionL)
+  testL <- l1 == l2
+  out <- list(fieldNameL, descriptionL, wbLength, testL)
+  return(out)
+}
+###############################################################
+
+
+# test list building functions
+t1 <- shortLists()
+t1
+t1 <- longLists()
+t1
+
+
+
+
+
+
+
+
+
+
 
 ## headers for 25 columns
 headers <- c("rank","DPName","dpID","DPNumber","table","tableDescription",
-              "fieldName","description","dataType","units","pubFormat",
-              "exampleEntry","inputs","source","timeIndex","timeDescription",
-              "spatialIndex","spatialDescription","horIndex","horDescription",
-              "vertIndex","vertDescription","downloadPkg","dataCategory",
-              "sampleInfo"); headers
+             "fieldName","description","dataType","units","pubFormat",
+             "exampleEntry","inputs","source","timeIndex","timeDescription",
+             "spatialIndex","spatialDescription","horIndex","horDescription",
+             "vertIndex","vertDescription","downloadPkg","dataCategory",
+             "sampleInfo"); headers
 
 # header list 
 headerL <- as.list(headers); length(headerL); headerL
 
-# create a field name list
-fieldNameL <- list("startDateTime","endDateTime",paste(pFieldName,"Mean",sep=""),
-                   paste(pFieldName,"Minimum",sep=""),
-                   paste(pFieldName,"Maximum",sep=""),
-                   paste(pFieldName,"Variance",sep=""),
-                   paste(pFieldName,"NumPts",sep=""),
-                   paste(pFieldName,"ExpUncert",sep=""),
-                   paste(pFieldName,"StdErMean",sep=""),
-                   "rangeQAQCRpt","persistenceQAQCRpt",
-                   "stepQAQCRpt","nullQAQCRpt",
-                   "gapQAQCRpt","consistencyQAQCRpt",
-                   "spikeQAQCRpt",
-                   "alphaQAQCRpt","betaQAQCRpt",
-                   "rangeFailQM","rangePassQM","rangeNAQM",
-                   "persistenceFailQM","persistencePassQM","persistenceNAQM",
-                   "stepFailQM","stepPassQM","stepNAQM",
-                   "nullFailQM","nullPassQM","nullNAQM",
-                   "gapFailQM","gapPassQM","gapNAQM",
-                   "spikeFailQM","spikePassQM","spikeNAQM",
-                   "consistencyFailQM","consistencyPassQM","consistencyNAQM",
-                   "alphaQM","betaQM","finalQF"
-                  ); fieldNameL; length(fieldNameL)
-
-## establish length of fieldNameL
-wbLength <- length(fieldNameL)
 
 ## create rank column ----------------------------------------
 rankL <- list(as.character(seq(1:wbLength))); rankL
@@ -137,60 +257,7 @@ tableL <- list(rep(paste(dpCaps,fTimeI,fDescI, sep="_"), wbLength)); tableL
 tableDescriptionL <- list(rep(paste(dpName,"averaged over",
                                     fTimeI,fDescI,sep=" "), wbLength)); tableDescriptionL
 
-## create a list of field descriptions --------------------------
-descriptionL <- list("Date and time at which a sampling is initiated",
-                     "Date and time at which a sampling is completed",
-  
-                     paste("Arithmetic mean of",pFieldDesc,sep=" "),
-                     paste("Minimum",pFieldDesc,sep=" "),
-                     paste("Maximum",pFieldDesc,sep=" "),
-                     paste("Variance in",pFieldDesc,sep=" "),
-                     paste("Number of points used to calculate the arithmetic mean of",pFieldDesc,sep=" "),
-                     paste("Expanded uncertainty for",pFieldDesc,sep=" "),
-                     paste("Standard error of the mean for",pFieldDesc,sep=" "),
-                     
-                     "Quality assurance and quality control report for the range test, which indicates whether a datum exceeds a realisitc value, detailed in NEON.DOC.011081 (1=fail, 0=pass, -1=NA (i.e., couldn't be run))",
-                     "Quality assurance and quality control report for the persistence test, which indicates whether there is a realistic fluctuation of values over a designated period of time, detailed in NEON.DOC.011081 (1=fail, 0=pass, -1=NA (i.e., couldn't be run))",
-                     "Quality assurance and quality control report for the step test, which indicates whether unusual jumps in the data exist, detailed in NEON.DOC.011081 (1=fail, 0=pass, -1=NA (i.e., couldn't be run))",
-                     "Quality assurance and quality control report for the null test, which indicates a missing datum, detailed in NEON.DOC.011081 (1=fail, 0=pass, -1=NA (i.e., couldn't be run))",
-                     "Quality assurance and quality control report for the gap test, which indicates that the datum is missing and is apart of a prolonged period of missing data, detailed in NEON.DOC.011081 (1=fail, 0=pass)",
-                     "Quality assurance and quality control report for the consistency test, which indicates whether or not measurements are consistent with co-located measurements, (1=fail, 0=pass, -1=NA (i.e., couldn't be run))",
-                     "Quality assurance and quality control report for the spike test, which indicates whether or not a datum has been identified as a spike, detailed in NEON.DOC.000783 (1=fail, 0=pass, -1=NA (i.e., couldn't be run))",
-                     "Quality assurance and quality control report for the alpha quality flag, which indicates if one or more quality analysis failed for a datum, detailed in NEON.DOC.001113 (1=fail, 0=pass, -1=NA (i.e., couldn't be run))",
-                     "Quality assurance and quality control report for the beta quality flag, which indicates if one or more quality analysis could not be run for a datum, detailed in NEON.DOC.001113 (1=fail, 0=pass, -1=NA (i.e., couldn't be run))",
-                     
-                     "Quality metric that summarizes the failed outcomes of the range test over the averaging period, as a percent",
-                     "Quality metric that summarizes the passed outcomes of the range test over the averaging period, as a percent",
-                     "Quality metric that summarizes when the range test could not be run over the averaging period, as a percent",
-                     
-                     "Quality metric that summarizes the failed outcomes of the persistence test over the averaging period, as a percent",
-                     "Quality metric that summarizes the passed outcomes of the persistence test over the averaging period, as a percent",
-                     "Quality metric that summarizes when the persistence test could not be run over the averaging period, as a percent",
-                     
-                     "Quality metric that summarizes the failed outcomes of the step test over the averaging period, as a percent",
-                     "Quality metric that summarizes the passed outcomes of the step test over the averaging period, as a percent",
-                     "Quality metric that summarizes when the step test could not be run over the averaging period, as a percent",
-                     
-                     "Quality metric that summarizes the failed outcomes of the null test over the averaging period, as a percent",
-                     "Quality metric that summarizes the passed outcomes of the null test over the averaging period, as a percent",
-                     "Quality metric that summarizes when the null test could not be run over the averaging period, as a percent",
-                     
-                     "Quality metric that summarizes the failed outcomes of the gap test over the averaging period, as a percent",
-                     "Quality metric that summarizes the passed outcomes of the gap test over the averaging period, as a percent",
-                     "Quality metric that summarizes when the gap test could not be run over the averaging period, as a percent",
-                     
-                     "Quality metric that summarizes the failed outcomes of the spike test over the averaging period, as a percent",
-                     "Quality metric that summarizes the passed outcomes of the spike test over the averaging period, as a percent",
-                     "Quality metric that summarizes when the spike test could not be run over the averaging period, as a percent",
-                     
-                     "Quality metric that summarizes the failed outcomes of the consistency test over the averaging period, as a percent",
-                     "Quality metric that summarizes the passed outcomes of the consistency test over the averaging period, as a percent",
-                     "Quality metric that summarizes when the consistency test could not be run over the averaging period, as a percent",
-                                                           
-                     "Quality metric detailing the outcomes of the alpha quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
-                     "Quality metric detailing the outcomes of the beta quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
-                     "Quality flag indicating whether a data product has passed or failed an overall assessment of its quality, detailed in NEON.DOC.001113 (1=fail, 0=pass)"
-                     ); descriptionL; length(descriptionL)
+
 
 ## create dataType column ------------------------------------------
 stringDataType <- "QAQCRpt"
@@ -371,26 +438,7 @@ headers <- c("rank","DPName","dpID","DPNumber","table","tableDescription",
 # header list 
 headerL <- as.list(headers); length(headerL); headerL
 
-# create a field name list
-fieldNameL <- list("startTime","endTime",paste(pFieldName,"Mean",sep=""),
-                   paste(pFieldName,"Minimum",sep=""),
-                   paste(pFieldName,"Maximum",sep=""),
-                   paste(pFieldName,"Variance",sep=""),
-                   paste(pFieldName,"NumPts",sep=""),
-                   paste(pFieldName,"ExpUncert",sep=""),
-                   paste(pFieldName,"StdErMean",sep=""),
-                   "rangeFailQM","rangePassQM","rangeNAQM",
-                   "persistenceFailQM","persistencePassQM","persistenceNAQM",
-                   "stepFailQM","stepPassQM","stepNAQM",
-                   "nullFailQM","nullPassQM","nullNAQM",
-                   "gapFailQM","gapPassQM","gapNAQM",
-                   "spikeFailQM","spikePassQM","spikeNAQM",
-                   "consistencyFailQM","consistencyPassQM","consistencyNAQM",
-                   "alphaQM","betaQM","finalQF"
-                    ); fieldNameL; length(fieldNameL)
 
-## establish length of fieldNameL
-wbLength <- length(fieldNameL)
 
 ## create rank column ----------------------------------------
 rankL <- list(as.character(seq(1:wbLength))); rankL
@@ -416,50 +464,6 @@ tableL <- list(rep(paste(dpCaps,fTimeI,fDescI, sep="_"), wbLength)); tableL
 tableDescriptionL <- list(rep(paste(dpName,"averaged over",
                                     fTimeI,fDescI,sep=" "), wbLength)); tableDescriptionL
 
-## create a list of field descriptions --------------------------
-descriptionL <- list("Time at which a sampling SOP (or SOPs) is/are initiated",
-                     "Time at which a sampling SOP (or SOPs) is/are completed",
-                     
-                     paste("Arithmetic mean of",pFieldDesc,sep=" "),
-                     paste("Minimum",pFieldDesc,sep=" "),
-                     paste("Maximum",pFieldDesc,sep=" "),
-                     paste("Variance in",pFieldDesc,sep=" "),
-                     paste("Number of points used to calculate the arithmetic mean of",pFieldDesc,sep=" "),
-                     paste("Expanded uncertainty for",pFieldDesc,sep=" "),
-                     paste("Standard error of the mean for",pFieldDesc,sep=" "),
-                     
-                     "Quality metric that summarizes the failed outcomes of the range test over the averaging period, as a percent",
-                     "Quality metric that summarizes the passed outcomes of the range test over the averaging period, as a percent",
-                     "Quality metric that summarizes when the range test could not be run over the averaging period, as a percent",
-                     
-                     "Quality metric that summarizes the failed outcomes of the persistence test over the averaging period, as a percent",
-                     "Quality metric that summarizes the passed outcomes of the persistence test over the averaging period, as a percent",
-                     "Quality metric that summarizes when the persistence test could not be run over the averaging period, as a percent",
-                     
-                     "Quality metric that summarizes the failed outcomes of the step test over the averaging period, as a percent",
-                     "Quality metric that summarizes the passed outcomes of the step test over the averaging period, as a percent",
-                     "Quality metric that summarizes when the step test could not be run over the averaging period, as a percent",
-                     
-                     "Quality metric that summarizes the failed outcomes of the null test over the averaging period, as a percent",
-                     "Quality metric that summarizes the passed outcomes of the null test over the averaging period, as a percent",
-                     "Quality metric that summarizes when the null test could not be run over the averaging period, as a percent",
-                     
-                     "Quality metric that summarizes the failed outcomes of the gap test over the averaging period, as a percent",
-                     "Quality metric that summarizes the passed outcomes of the gap test over the averaging period, as a percent",
-                     "Quality metric that summarizes when the gap test could not be run over the averaging period, as a percent",
-                     
-                     "Quality metric that summarizes the failed outcomes of the spike test over the averaging period, as a percent",
-                     "Quality metric that summarizes the passed outcomes of the spike test over the averaging period, as a percent",
-                     "Quality metric that summarizes when the spike test could not be run over the averaging period, as a percent",
-                     
-                     "Quality metric that summarizes the failed outcomes of the consistency test over the averaging period, as a percent",
-                     "Quality metric that summarizes the passed outcomes of the consistency test over the averaging period, as a percent",
-                     "Quality metric that summarizes when the consistency test could not be run over the averaging period, as a percent",
-                                          
-                     "Quality metric detailing the outcomes of the alpha quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
-                     "Quality metric detailing the outcomes of the beta quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
-                     "Quality flag indicating whether a data product has passed or failed an overall assessment of its quality, detailed in NEON.DOC.001113 (1=fail, 0=pass)"
-); descriptionL; length(descriptionL)
 
 ## create dataType column ------------------------------------------
 stringDataType <- "QAQCRpt"
