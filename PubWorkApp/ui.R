@@ -10,35 +10,77 @@ shinyUI(fluidPage(
   
   sidebarLayout(position = "right",
                 sidebarPanel(
-                  helpText("Use this app to make a template for a NEON publication workbook"),
+                  # instructions ######################
+                  helpText(h4("Instructions")),
                   br(),
-                  verbatimTextOutput("test")
+                  helpText("Use this app to make a NEON publication workbook template for 
+                           sensor-based data products."),
+                  helpText("Data product name is the official name from the catalog, written in title 
+                            case, such as 'IR Biological Temperature.'"),
+                  helpText("Data product initials are the capital letters corresponding with 
+                           the name, such as 'IRBT'."),
+                  helpText("Data product ID number is the 5 digit code from the catalog, such as '00054'."),
+                  helpText("Data product revision number is the 3 digit revision number, such as '001'."),
+                  helpText("Agile number is the 6 digit number specific to the publication workbook, 
+                           usually created in advance as a placeholder for eventual submission."),
+                  helpText("Data product units come from a controlled list, accessed via a DPS shiny app 
+                           by Claire Lunch."),
+                  helpText("Primary subproduct name is a controlled term in camel case, such as 'inPAR'."),
+                  helpText("Primary subproduct description is a brief description of the prior name, such as
+                           'incoming PAR'."),
+                  helpText("Secondary subproduct name is a controlled term in camel case, such as 'outPAR'."),
+                  helpText("Secondary subproduct description is a brief description of the prior name, such as
+                           'outgoing PAR'."),
+                  helpText("Tertiary subproduct name is a controlled term in camel case, such as 'sidePAR'."),
+                  helpText("Tertiary subproduct description is a brief description of the prior name, such as
+                           'sideways PAR'."),
+                  helpText("Smallest averaging number is, for example, '1' if the smallest averaging interval 
+                           is 1 minute."),
+                  helpText("Smallest averaging unit is, for example, 'minute' if the smallest averaging interval 
+                           is 1 minute."),
+                  helpText("Intermediate averaging number is, for example, '5' if the intermediate averaging interval 
+                           is 5 minutes. Use 'NA' if there is only one averaging interval."),
+                  helpText("Intermediate averaging unit is, for example, 'minute' if the intermediate averaging interval 
+                           is 5 minutes. Use 'NA' if there is only one averaging interval."),
+                  helpText("Largest averaging number is, for example, '30' if the largest averaging interval 
+                           is 30 minutes. Use 'NA' if there are only two averaging intervals."),
+                  helpText("Largest averaging unit is, for example, 'minute' if the largest averaging interval 
+                           is 30 minutes. Use 'NA' if there are only two averaging intervals."),
+                  #helpText("Output directory is the location where you want the publication workbook
+                           #template to be saved. For example, 'C:\\\\Users\\\\username\\\\Desktop'."),
+                  helpText("Click the button at the bottom to run application."),
+                  br(),
+                  textOutput("test")
                   ),
                 
                 mainPanel(
                   # data entry ########################
-                  h4("Enter Data Product Information Below"),
-                  textInput("dpName", label = h5("Data Product Name (Title Case)")),
-                  textInput("dpCaps", label = h5("Data Product Initials (C[apital] L[etters])")),
-                  textInput("dpId5", label = h5("Data Product ID Number (5 digits)")),
-                  textInput("dpRev3", label = h5("Data Product Revision (3 digits)")),
-                  textInput("code3", label = h5("Data Product 3-Letter Code (3 digits)")),
-                  textInput("agile6", label = h5("Agile Number for Workbook (6 digits)")),
-                  textInput("units", label = h5("Data Product Units (Controlled List)")),
-                  textInput("pFieldName", label = h5("Primary Subproduct Name (inPAR)")),
-                  textInput("pFieldDesc", label = h5("Primary Subproduct Description (incoming PAR)")),
-                  textInput("sFieldName", label = h5("Secondary Subproduct Name (outPAR or NA)")),
-                  textInput("sFieldDesc", label = h5("Secondary Subproduct Description (outgoing PAR or NA)")),
-                  textInput("tFieldName", label = h5("Tertiary Subproduct Name (sidePAR or NA)")),
-                  textInput("tFieldDesc", label = h5("Tertiary Subproduct Description (sideways PAR or NA)")),
-                  textInput("fTimeA", label = h5("Smallest Averaging Number (1 for 1-minute period)")),
-                  textInput("fDescA", label = h5("Smallest Averaging Unit (minute for 1-minute period)")),
-                  textInput("fTimeB", label = h5("Intermediate Averaging Number (5 for 5-minute period or NA)")),  
-                  textInput("fDescB", label = h5("Intermediate Averaging Unit (minute for 5-minute period or NA)")),
-                  textInput("fTimeC", label = h5("Largest Averaging Number (30 for 30-minute period or NA)")),
-                  textInput("fDescC", label = h5("Largest Averaging Unit (minute for 30-minute period or NA)")),
-                  fileInput("dirName", label = h3("Choose Output Directory")),
-                  actionButton("action", label = h4("Click Here to Generate Workbook"))
+                  br(),
+                  h4("Data Entry"),
+                  br(),
+                  textInput("dpName", label = h5("Data Product Name")),
+                  textInput("dpCaps", label = h5("Data Product Initials")),
+                  textInput("dpId5", label = h5("Data Product ID Number")),
+                  textInput("dpRev3", label = h5("Data Product Revision")),
+                  textInput("code3", label = h5("Data Product 3-Letter Code")),
+                  textInput("agile6", label = h5("Agile Number for Workbook")),
+                  textInput("units", label = h5("Data Product Units")),
+                  textInput("pFieldName", label = h5("Primary Subproduct Name")),
+                  textInput("pFieldDesc", label = h5("Primary Subproduct Description")),
+                  textInput("sFieldName", label = h5("Secondary Subproduct Name")),
+                  textInput("sFieldDesc", label = h5("Secondary Subproduct Description")),
+                  textInput("tFieldName", label = h5("Tertiary Subproduct Name")),
+                  textInput("tFieldDesc", label = h5("Tertiary Subproduct Description")),
+                  textInput("fTimeA", label = h5("Smallest Averaging Number")),
+                  textInput("fDescA", label = h5("Smallest Averaging Unit")),
+                  textInput("fTimeB", label = h5("Intermediate Averaging Number")),  
+                  textInput("fDescB", label = h5("Intermediate Averaging Unit")),
+                  textInput("fTimeC", label = h5("Largest Averaging Number")),
+                  textInput("fDescC", label = h5("Largest Averaging Unit")),
+                  #textInput("dirName", label = h5("Output Directory")),
+                  br(),
+                  br(),
+                  actionButton("click", label = h4("CLICK TO GENERATE WORKBOOK"))
                 )
   )
 ))
