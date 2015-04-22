@@ -31,8 +31,8 @@ shinyUI(fluidPage(
                            the name, such as 'IRBT'."),
                   helpText("Data product ID number is the 5 digit code from the catalog, such as '00054'."),
                   helpText("Data product revision number is the 3 digit revision number, such as '001'."),
-                  helpText("The Agile number is the 6 digit number specific to the publication workbook, 
-                           usually created in Agile in advance as a placeholder for eventual submission."),
+                  helpText("The ATBD number is the 6 digit number, specific to the product, used in the 
+                           publication workbook file name."),
                   helpText("Data product units come from a controlled list, accessed via a DPS shiny app 
                            by Claire Lunch."),
                   helpText("Primary subproduct name is a controlled term in camel case, such as 'inPAR'."),
@@ -79,7 +79,7 @@ shinyUI(fluidPage(
                   textInput("dpId5", label = h5("Data Product ID Number")),
                   textInput("dpRev3", label = h5("Data Product Revision")),
                   textInput("code3", label = h5("Data Product 3-Letter Code")),
-                  textInput("agile6", label = h5("Agile Number for Workbook")),
+                  textInput("atbd6", label = h5("ATBD Number for File Name")),
                   textInput("units", label = h5("Data Product Units")),
                   textInput("pFieldName", label = h5("Primary Subproduct Name")),
                   textInput("pFieldDesc", label = h5("Primary Subproduct Description")),

@@ -18,7 +18,7 @@ shinyServer(function(input, output){
       dpId5 <- input$dpId5
       dpRev3 <- input$dpRev3
       code3 <- input$code3
-      agile6 <- input$agile6
+      atbd6 <- input$atbd6
       units <- input$units
       # sub products
       pFieldName <- input$pFieldName
@@ -201,7 +201,7 @@ shinyServer(function(input, output){
       
       #############  CREATE A PORTION OF A PUB WORKBOOK  ###############
       wbBuilder <- function(listObject, dpName, dpCaps, dpId5, dpRev3, code3, 
-                            agile6, units, pFieldNameI, pFieldDescI, fTimeI, 
+                            atbd6, units, pFieldNameI, pFieldDescI, fTimeI, 
                             fDescI, wd=getwd()){
         # define inputs
         fieldNameL <- unlist(listObject[1])
@@ -385,7 +385,7 @@ shinyServer(function(input, output){
               fTimeI=fTimeList[i]
               fDescI=fDescList[i]
               wbPart <- wbBuilder(listObject=listObject, dpName=dpName, dpCaps=dpCaps, 
-                                  dpId5=dpId5, dpRev3=dpRev3, code3=code3, agile6=agile6, 
+                                  dpId5=dpId5, dpRev3=dpRev3, code3=code3, atbd6=atbd6, 
                                   units=units, pFieldNameI=pFieldNameI, 
                                   pFieldDescI=pFieldDescI, fTimeI=fTimeI, fDescI=fDescI)
               mergedData <- rbind(mergedData, wbPart)
@@ -399,7 +399,7 @@ shinyServer(function(input, output){
               fTimeI=fTimeList[i]
               fDescI=fDescList[i]
               wbPart <- wbBuilder(listObject=listObject, dpName=dpName, dpCaps=dpCaps, 
-                                  dpId5=dpId5, dpRev3=dpRev3, code3=code3, agile6=agile6, 
+                                  dpId5=dpId5, dpRev3=dpRev3, code3=code3, atbd6=atbd6, 
                                   units=units, pFieldNameI=pFieldNameI, 
                                   pFieldDescI=pFieldDescI, fTimeI=fTimeI, fDescI=fDescI)
               mergedData <- rbind(mergedData, wbPart)
@@ -416,7 +416,7 @@ shinyServer(function(input, output){
       main <- function() {
         pubWorkbook <- wbAssembler()
         fileName <- paste(code3, "datapub", 
-                          paste("NEONDOC", agile6, ".txt", sep=""), sep="_")
+                          paste("NEONDOC", atbd6, ".txt", sep=""), sep="_")
         fullFileName <- paste(dirName, fileName, sep="/")
         write.table(x=pubWorkbook, file=fullFileName, quote=TRUE, sep="\t",
                     row.names=FALSE, na="NA", fileEncoding="UTF-8")
