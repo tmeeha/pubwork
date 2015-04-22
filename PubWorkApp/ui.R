@@ -2,38 +2,50 @@
 
 library(shiny)
 
-# Define UI for application that draws a histogram
+##################    define UI for application   #######################
 shinyUI(fluidPage(
   
-  # Application title
+  
+  
+  # application title
   titlePanel("PubWork Application"),
   
+  
+  
+  # page layout
   sidebarLayout(position = "right",
+                
+                
+                
+                # sidebar
                 sidebarPanel(
-                  # instructions ######################
+                  # instructions
                   helpText(h4("Instructions")),
                   br(),
                   helpText("Use this app to make a NEON publication workbook template for 
                            sensor-based data products."),
+                  br(),
                   helpText("Data product name is the official name from the catalog, written in title 
                             case, such as 'IR Biological Temperature.'"),
                   helpText("Data product initials are the capital letters corresponding with 
                            the name, such as 'IRBT'."),
                   helpText("Data product ID number is the 5 digit code from the catalog, such as '00054'."),
                   helpText("Data product revision number is the 3 digit revision number, such as '001'."),
-                  helpText("Agile number is the 6 digit number specific to the publication workbook, 
-                           usually created in advance as a placeholder for eventual submission."),
+                  helpText("The Agile number is the 6 digit number specific to the publication workbook, 
+                           usually created in Agile in advance as a placeholder for eventual submission."),
                   helpText("Data product units come from a controlled list, accessed via a DPS shiny app 
                            by Claire Lunch."),
                   helpText("Primary subproduct name is a controlled term in camel case, such as 'inPAR'."),
-                  helpText("Primary subproduct description is a brief description of the prior name, such as
+                  helpText("Primary subproduct description is a brief description of the subproduct name, such as
                            'incoming PAR'."),
-                  helpText("Secondary subproduct name is a controlled term in camel case, such as 'outPAR'."),
-                  helpText("Secondary subproduct description is a brief description of the prior name, such as
-                           'outgoing PAR'."),
-                  helpText("Tertiary subproduct name is a controlled term in camel case, such as 'sidePAR'."),
-                  helpText("Tertiary subproduct description is a brief description of the prior name, such as
-                           'sideways PAR'."),
+                  helpText("Secondary subproduct name is a controlled term in camel case, such as 'outPAR'. 
+                           Use 'NA' if there is only one subproduct."),
+                  helpText("Secondary subproduct description is a brief description of the subproduct name, such as
+                           'outgoing PAR'. Use 'NA' if there is only one subproduct."),
+                  helpText("Tertiary subproduct name is a controlled term in camel case, such as 'sidePAR'. 
+                           Use 'NA' if there are only two subproducts."),
+                  helpText("Tertiary subproduct description is a brief description of the subproduct name, such as
+                           'sideways PAR'. Use 'NA' if there are only two subproducts"),
                   helpText("Smallest averaging number is, for example, '1' if the smallest averaging interval 
                            is 1 minute."),
                   helpText("Smallest averaging unit is, for example, 'minute' if the smallest averaging interval 
@@ -50,11 +62,15 @@ shinyUI(fluidPage(
                            #template to be saved. For example, 'C:\\\\Users\\\\username\\\\Desktop'."),
                   helpText("Click the button at the bottom to run application."),
                   br(),
+                  br(),
                   textOutput("test")
                   ),
                 
+                
+                
+                # main panel
                 mainPanel(
-                  # data entry ########################
+                  # data entry
                   br(),
                   h4("Data Entry"),
                   br(),
@@ -84,3 +100,4 @@ shinyUI(fluidPage(
                 )
   )
 ))
+#########################################################################
