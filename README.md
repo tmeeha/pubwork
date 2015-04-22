@@ -1,5 +1,5 @@
 # pubwork
-Code for making NEON publication workbooks
+Portable shiny app for making NEON publication workbooks
 
 1. Download the 'PubWorkApp' directory to anywhere you'd like
 on your local computer
