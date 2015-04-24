@@ -5,10 +5,8 @@ library(shiny)
 ######################    DEFINE SERVER LOGIC    #######################
 shinyServer(function(input, output){
 
-  outVal <- eventReactive(
-    input$click, {
-      
-      
+  outVal1 <- eventReactive(
+    input$click1, {
       
       # get variables ##################################################
       dirName <- getwd()
@@ -35,8 +33,6 @@ shinyServer(function(input, output){
       fTimeC <- input$fTimeC
       fDescC <- input$fDescC
       ##################################################################
-      
-      
       
       ########  CREATE LONG LIST OF FIELDS AND DESCRIPTIONS  ###########
       longLists <- function(pFieldName, pFieldDesc) {
@@ -123,8 +119,6 @@ shinyServer(function(input, output){
         return(out)
       }
       ##################################################################
-      
-      
             
       ########  CREATE SHORT LIST OF FIELDS AND DESCRIPTIONS  ##########
       shortLists <- function(pFieldName, pFieldDesc) {
@@ -196,8 +190,6 @@ shinyServer(function(input, output){
         return(out)
       }
       ##################################################################
-      
-      
       
       #############  CREATE A PORTION OF A PUB WORKBOOK  ###############
       wbBuilder <- function(listObject, dpName, dpCaps, dpId5, dpRev3, code3, 
@@ -356,9 +348,7 @@ shinyServer(function(input, output){
         colnames(newdata) <- headers
         return(newdata)
       }
-      ##################################################################
-      
-      
+      ##################################################################   
       
       ###################    ASSEMBLE WORKBOOK PARTS      ##############
       wbAssembler <- function() {
@@ -410,10 +400,8 @@ shinyServer(function(input, output){
       }
       ##################################################################
       
-      
-      
-      #############################  MAIN  #############################
-      main <- function() {
+      #####################  MAIN FUNCTION FOR SECOND TAB  #############
+      main1 <- function() {
         pubWorkbook <- wbAssembler()
         fileName <- paste(code3, "datapub", 
                           paste("NEONDOC", atbd6, ".txt", sep=""), sep="_")
@@ -422,16 +410,87 @@ shinyServer(function(input, output){
                     row.names=FALSE, na="NA", fileEncoding="UTF-8")
       }
       ##################################################################
-                  
-      main()  
-      message <- "If you look in the working directory, you should now see your publication workbook template."
-      message
+      
+      # run functions
+      main1()
+      
+      # send message
+      message1 <- "If you look in the working directory, you should now see your publication workbook template."
+      message1
+    })
+  
 
-  })
+  outVal2 <- eventReactive(
+    input$click2, {
+      
+      ##################  GET VARIABLES  ###############################
+      readmeTemplateLoc <- getwd()
+      DPWB_lowest_time_res <- input$DPWB_lowest_time_res
+      ATBD <- input$atbd6
+      DPDescription <- input$DPDescription
+      model <- input$model
+      manufacturer <- input$manufacturer
+      changeLog <- input$changeLog    
+      ##################################################################
+      
+      ####################   MAIN FUNCTION FOR SECOND TAB  #############
+      main2 <- function(readmeTemplateLoc,DPWB_lowest_time_res,
+                                   ATBD,DPDescription,model,
+                                   manufacturer,changeLog)  {
+        # read in data publication workbook
+        ingest<-read.table(DPWB_lowest_time_res, header=TRUE, 
+                           sep="\t", fileEncoding="UTF-8")
+        # create names for output files
+        readmeName<-paste("NEON.DP1.",substr(ingest$dpID[1],19,28),
+                          "_readme.txt",sep="")
+        varName<-paste("NEON.DP1.",substr(ingest$dpID[1],19,28),
+                       "_variables.csv",sep="")
+        # list of columns you want to keep for the variables
+        varContent<-c("fieldName", "description", "dataType", 
+                      "units","downloadPkg")
+        # subset the publication workbook
+        var<-ingest[,varContent]
+        var <- unique(var)
+        # write variables .csv file
+        write.csv(var, varName, row.names=FALSE)
+        # read in the readme template
+        readmeTemp<-readLines(paste(readmeTemplateLoc,
+                                    "readmeTemplate.txt",sep="/"))
+        # identify the keywords for updating
+        replace<-c("DPID","DPNAME","READMENAME","DPDESCRIPTION",
+                   "MANUFACTURER","MODEL","VARIABLESFILE","AlgoTBD","CHANGELOG")
+        # get the applicable information out of the data publication workbook
+        info<-c(as.character(ingest$dpID[1]),as.character(ingest$DPName[1]),
+                readmeName,DPDescription,manufacturer,model,varName,
+                paste(ATBD," - ","Algorithm Theoretical Basis Document ", 
+                      as.character(ingest$DPName[1]), sep=""),changeLog)
+        # loop to replace the applicable information in the readme template
+        for(i in 1:length(replace)){
+          readmeTemp <- gsub(pattern=replace[i], replacement=info[i],
+                             x=readmeTemp)
+        }
+        # write out the data prodcut specific readme file
+        writeLines(readmeTemp,readmeName)
+      }
+      
+      # run functions
+      main2(readmeTemplateLoc=readmeTemplateLoc,DPWB_lowest_time_res=DPWB_lowest_time_res,
+            ATBD=ATBD,DPDescription=DPDescription,model=model,
+            manufacturer=manufacturer,changeLog=changeLog)
+      
+      # send message
+      message2 <- "If you look in the working directory, you should now see your readme and variable files."
+      message2
+      
+    })
     
-  output$test <- renderText({
-    outVal()
-  })
+  output$message1 <- renderText({
+    outVal1()
+    })
+  
+  output$message2 <- renderText({
+    outVal2()
+    })
     
 })
 ########################################################################
