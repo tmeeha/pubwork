@@ -441,9 +441,9 @@ shinyServer(function(input, output){
         ingest<-read.table(DPWB_lowest_time_res, header=TRUE, 
                            sep="\t", fileEncoding="UTF-8")
         # create names for output files
-        readmeName<-paste("NEON.DP1.",substr(ingest$dpID[1],19,28),
+        readmeName<-paste("NEONDP1",substr(ingest$dpID[1],19,28),
                           "_readme.txt",sep="")
-        varName<-paste("NEON.DP1.",substr(ingest$dpID[1],19,28),
+        varName<-paste("NEONDP1",substr(ingest$dpID[1],19,28),
                        "_variables.csv",sep="")
         # list of columns you want to keep for the variables
         varContent<-c("fieldName", "description", "dataType", 
