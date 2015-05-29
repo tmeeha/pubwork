@@ -34,6 +34,8 @@ Sensor: MANUFACTURER - MODEL
 
 Term descriptions, data types, and units can be found in: VARIABLESFILE
 
+NEON requests that users cite data use as "National Ecological Observatory Network. 2015. Data accessed on [date of access]. Available on-line  http://data.neoninc.org/ from National Ecological Observatory Network, Boulder, CO, USA." Unique, reproducible citation codes on a per-download basis are currently in development. - See more at: http://neoninc.org/about/terms-of-use/data-usage-and-citation-policies#sthash.4tXJtQx6.dpuf
+
 These data are considered provisional (created using a baseline algorithm approach with a minimal or reduced set of QA/QC checks). Minor updates to the QA/QC and processing algorithms will occur during construction (prior to 2017). Changes to provisional data products will occur on an as-needed basis. Please check back to this site for updates tracked in change logs. Query reproducibility on provisional data cannot be guaranteed.  
 
 Change log:
